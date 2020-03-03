@@ -9,13 +9,12 @@ struct Stolp {
 } s1, s2, s3;
 
 
-
+// Če gre večje na manjšo
 bool isBigger(int prvi, int drugi) {
     return prvi > drugi;
 }
 
-
-
+// Premakni iz stolpca v stolpec
 void change(int from, int to) {
     switch (from) {
         case 1 :
@@ -50,7 +49,7 @@ void change(int from, int to) {
                         break;
                     }
                 default:
-                    cout << "NAPAČEN VNOS";
+                    cout << "NAPAČEN VNOS" << endl << endl;
                     break;
             }
             break;
@@ -88,7 +87,7 @@ void change(int from, int to) {
                         break;
                     }
                 default:
-                    cout << "NAPAČEN VNOS";
+                    cout << "NAPAČEN VNOS" << endl << endl;
                     break;
             }
             break;
@@ -124,7 +123,7 @@ void change(int from, int to) {
                         break;
                     }
                 default:
-                    cout << "NAPAČEN VNOS";
+                    cout << "NAPAČEN VNOS" << endl << endl;
                     break;
             }
             break;
@@ -156,10 +155,6 @@ void izpisiStolp() {
 
 int main() {
     int inputNum;
-    s1.stolp;
-    s2.stolp;
-    s3.stolp;
-
     int from;
     int to;
 
@@ -186,9 +181,8 @@ int main() {
         change(from, to);
     }
 
-
-    cout << endl;
-    //cout << "==========" << setw(20) << "==========" << setw(20) << "==========" << setw(20);
+    cout << "ČESTITAM!" << endl;
+    izpisiStolp();
 
     return 0;
 }
