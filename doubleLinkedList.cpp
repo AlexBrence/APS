@@ -3,8 +3,6 @@
 using namespace std;
 
 
-
-
 struct node {
     int key;
     node *prev, *next;
@@ -15,7 +13,7 @@ node *tail = nullptr;
 bool running = true;
 
 
-node *iskanjePodatka(node *head, int key) {
+node *iskanjePodatka(int key) {
     node *current = head;
 
     while (current != nullptr && current->key != key) {
@@ -30,30 +28,134 @@ node *iskanjePodatka(node *head, int key) {
     }
 }
 
-void vnosGlava(node *newInput, node *head) {
-    head->prev = newInput;
+void vnosGlava(int key) {
+    node *newInput = new node();
+    newInput->key = key;
     newInput->next = head;
-    head = newInput;
     newInput->prev = nullptr;
-}
 
-
-void vnosZaElt(node *currNode, node *newNode) {
-    newNode->next = currNode->next;
-    newNode->prev = currNode;
-    currNode->next = newNode;
-
-    if (newNode->next != nullptr) {
-        newNode->next->prev = newNode;
+    if (head != nullptr) {
+        head->prev = newInput;
     }
     else {
-        node *tail = newNode;
+        tail = newInput;
+    }
+    head = newInput;
+}
+
+
+void vnosZaElt(int key, int inputKey) {
+    node *newNode = new node();
+    newNode->key = inputKey;
+
+    node* currNode = head;
+    while (currNode->key != key && currNode != nullptr) {
+        currNode = currNode->next;
+    }
+
+    if (currNode->key != key) {
+        cout << "Vnešena vrednost ne obstaja!" << endl << endl;
+    }
+    else {
+        newNode->next = currNode->next;
+        newNode->prev = currNode;
+        currNode->next = newNode;
+
+        if (newNode->next != nullptr) {
+            newNode->next->prev = newNode;
+        }
+        else {
+            node *tail = newNode;
+        }
     }
 }
 
-void vnosZaRepom(node *newNode) {
+void vnosZaRepom(int key) {
+    node *newNode = new node();
+    newNode->key = key;
+    newNode->next = nullptr;
 
+    if (tail != nullptr) {
+        tail->next = newNode;
+    }
+    else {
+        head = newNode;
+    }
+    tail = newNode;
 }
+
+void brisanjePodatka(int key) {
+    node *deleted = head;
+    while (deleted->key != key && deleted != nullptr) {
+        deleted = deleted->next;
+    }
+
+    if (deleted->key != key) {
+        cout << "Podatek ne obstaja!" << endl << endl;
+    }
+    else {
+        if (deleted->prev == nullptr && deleted->next == nullptr) {
+            head = nullptr;
+            tail = nullptr;
+        }
+
+        if (deleted->prev != nullptr) {
+            deleted->prev->next = deleted->next;
+
+            if (deleted->next != nullptr) {
+                deleted->next->prev = deleted->prev;
+            }
+        }
+        else {
+            head = deleted->next;
+            head->prev = nullptr;
+        }
+
+        if (deleted->next != nullptr) {
+            deleted->next->prev = deleted->prev;
+
+            if (deleted->prev != nullptr) {
+                deleted->prev->next = deleted->next;
+            }
+        }
+
+        else {
+            tail = deleted->prev;
+            tail->next = nullptr;
+        }
+
+    }
+
+
+    delete deleted;
+}
+
+
+void izpisGlavaRep() {
+    node *tmp = head;
+
+    while (tmp != nullptr) {
+        cout << tmp->key << ", ";
+        tmp = tmp->next;
+    }
+    cout << endl << endl;
+
+    delete tmp;
+}
+
+
+void izpisRepGlava() {
+    node *tmp = tail;
+
+    while (tmp != nullptr) {
+        cout << tmp->key << ", ";
+        tmp = tmp->prev;
+    }
+    cout << endl << endl;
+
+    delete tmp;
+}
+
 
 
 void izpisMenija() {
@@ -73,33 +175,52 @@ void izpisMenija() {
     cout << "Izbira: " << endl;
     cin >> izbira;
 
+    int value;
+
     switch (izbira) {
         case 1 :
-            //iskanjePodatka();
+            int keySearch;
+            cout << "Kateri podatek želiš poiskati?\n";
+            cin >> keySearch;
+            iskanjePodatka(keySearch);
             break;
         case 2 :
-            //vnosGlava();
+            cout << "Vnesi vrednost: " << endl;
+            cin >> value;
+            vnosGlava(value);
             break;
         case 3 :
-            //vnosZaElt();
+            int key, newKey;
+            cout << "Vnesi podatek, za katerega boš vnesel nov podatek: ";
+            cin >> key;
+            cout << "\nVnesi nov podatek: ";
+            cin >> newKey;
+            vnosZaElt(key, newKey);
             break;
         case 4 :
-            //vnosZaRepom();
+            cout << "Vnesi vrednost: " << endl;
+            cin >> value;
+            vnosZaRepom(value);
             break;
         case 5 :
-            //brisanjePodatka();
+            cout << "Vnesi podatek, ki ga želiš izbrisati: ";
+            cin >> value;
+            brisanjePodatka(value);
             break;
         case 6 :
-            //izpisGlavaRep();
+            izpisGlavaRep();
             break;
         case 7 :
-            //izpisRepGlava();
+            izpisRepGlava();
             break;
         case 8 :
             //hitrostTest();
             break;
         case 9 :
             running = false;
+            break;
+        default :
+            cout << "NAPAČEN VNOS!" << endl << endl;
             break;
     }
 }
