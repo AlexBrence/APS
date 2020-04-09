@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <random>
 #include <algorithm>
 
@@ -46,12 +47,12 @@ int deli(int *&polje, int dno, int vrh) {
     int pe = polje[dno];
     int l = dno;
     int d = vrh;
-    while (l <= d) {
+    while (l < d) {
         while (polje[l] <= pe && l < vrh)
             l++;
         while (polje[d] >= pe && d > dno)
             d--;
-        if (l <= d) {
+        if (l < d) {
             swap(polje[l], polje[d]);
         }
     }
@@ -60,6 +61,7 @@ int deli(int *&polje, int dno, int vrh) {
 }
 
 
+// TODO dodaj da se pokaže čas!
 void hitroUredi (int *&polje, int dno, int vrh, bool mediana) {
     // Opcija z mediano
     if (preveri(polje, dno, vrh) || mediana) {
@@ -73,6 +75,18 @@ void hitroUredi (int *&polje, int dno, int vrh, bool mediana) {
     }
 }
 
+
+void timeQS(int *&polje, int dno, int vrh, bool mediana) {
+    auto start = std::chrono::steady_clock::now();
+    hitroUredi(polje, dno, vrh, mediana);
+    auto stop = std::chrono::steady_clock::now();
+
+    cout << "Čas pri urejanju s QS algoritmom je " <<
+        std::chrono::duration_cast<std::chrono::microseconds>(stop-start).count()
+        << " mikrosekund.";
+}
+
+
 void bubbleSort(int *&polje, const int N) {
     for (int i = 0; i < N-1; i++) {
         for (int j = 0; j < N-i-1; j++) {
@@ -80,6 +94,17 @@ void bubbleSort(int *&polje, const int N) {
                 swap(polje[j], polje[j+1]);
         }
     }
+}
+
+
+void timeBubble(int *&polje, const int N) {
+    auto start = std::chrono::steady_clock::now();
+    bubbleSort(polje, N);
+    auto stop = std::chrono::steady_clock::now();
+
+    cout << "Čas pri urejanju z Bubble Sort algoritmom je " <<
+        std::chrono::duration_cast<std::chrono::microseconds>(stop-start).count()
+    << " mikrosekund.";
 }
 
 
@@ -137,13 +162,13 @@ void izpisMenija() {
                 cout << "Zaporedje JE urejeno";
             break;
         case 6:
-            hitroUredi(array, 0, arraySize, false);
+            timeQS(array, 0, arraySize-1, false);
             break;
         case 7:
-            hitroUredi(array, 0, arraySize, true);
+            timeQS(array, 0, arraySize-1, true);
             break;
         case 8:
-            bubbleSort(array, arraySize);
+            timeBubble(array, arraySize);
             break;
         case 9:
             running = false;
